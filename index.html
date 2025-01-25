@@ -17,17 +17,34 @@
     </div>
 
     <script>
-        // Fetch the current zinger count from the counter.json file
+        // Replace this with your actual GitHub personal access token (PAT)
+        const GITHUB_TOKEN = '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N';
+
+        // Replace with your actual GitHub repository info
+        const REPO_OWNER = 'comytt';
+        const REPO_NAME = 'Isaac-Zingers';
+        const COUNTER_FILE_PATH = 'counter.json';  // Path to your counter file
+
+        // Function to load the counter value from the private GitHub repository
         function loadCounter() {
-            fetch('https://raw.githubusercontent.com/comytt/isaac-sucks/main/counter.json') // Replace with your actual GitHub URL
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('counterValue').textContent = data.zingers;
-                })
-                .catch(error => {
-                    console.error("Error fetching zinger count:", error);
-                    document.getElementById('counterValue').textContent = "Error loading count";
-                });
+            fetch(`https://api.github.com/repos/${comytt}/${Isaac-Sucks}/contents/${main/counter.json}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${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}`, // Authenticate with the token
+                    'Accept': 'application/vnd.github.v3.raw' // Request raw content of the file
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Decode the base64 content returned by GitHub API
+                const decodedContent = atob(data.content);
+                const counterData = JSON.parse(decodedContent);
+                document.getElementById('counterValue').textContent = counterData.zingers;
+            })
+            .catch(error => {
+                console.error("Error fetching zinger count:", error);
+                document.getElementById('counterValue').textContent = "Error loading count";
+            });
         }
 
         // Function to add a zinger and update the count on GitHub
@@ -44,10 +61,10 @@
             const newZingerCount = currentCount + 1;
 
             // Make API call to trigger GitHub Action to update the count
-            fetch('https://api.github.com/repos/comytt/isaac-sucks/dispatches', {
+            fetch(`https://api.github.com/repos/${comyttR}/${Isaac-Zingers}/dispatches`, {
                 method: 'POST',
                 headers: {
-                    'Authorization': `Bearer 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`,  // Replace with your GitHub token securely
+                    'Authorization': `Bearer ${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}`,
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
