@@ -27,7 +27,7 @@
         let zingerCount = 0; // Initialize count
 
         // Fetch the current zinger count from GitHub repository
-        fetch('https://raw.githubusercontent.com/yourusername/yourrepository/main/counter.json')
+        fetch('https://raw.githubusercontent.com/comytt/Isaac-Zingers/main/counter.json')
             .then(response => response.json())
             .then(data => {
                 zingerCount = data.zingers;
