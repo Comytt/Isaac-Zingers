@@ -21,10 +21,10 @@ jobs:
           
       - name: Commit Changes
         run: |
-          git config --global user.email "youremail@example.com"
-          git config --global user.name "Your GitHub Username"
+          git config --global user.email "cooperdean06@gmail.com"
+          git config --global user.name "comytt"
           git add counter.json
           git commit -m "Update zinger count to ${{ github.event.inputs.zinger_count }}"
           git push
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Use the secret token here
+          GITHUB_TOKEN: ${{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}}  # Use the secret token here
