@@ -13,20 +13,13 @@
         <div class="counter">
             <span id="counterValue">0</span>
         </div>
-        <button id="addZingerButton">Add Zinger</button>
     </div>
 
     <script>
         // Get the elements
         const counterValue = document.getElementById('counterValue');
-        const addZingerButton = document.getElementById('addZingerButton');
         
-        let zingerCount = 0;
-
-        // Function to increase the zinger count
-        addZingerButton.addEventListener('click', () => {
-            zingerCount++;
-            counterValue.textContent = zingerCount;
+        let zingerCount = 5;
         });
     </script>
 </body>
