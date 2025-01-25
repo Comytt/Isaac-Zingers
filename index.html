@@ -12,7 +12,54 @@
         <p>How many zingers has Isaac made?</p>
         <div class="counter">
             <span id="counterValue">5</span>
-        </div>
+         </div>
+        <button id="addZingerButton" style="display:none;">Add Zinger</button>
     </div>
+
+    <script>
+        // Firebase config (replace with your own credentials)
+        const firebaseConfig = {
+          apiKey: "AIzaSyCq431flv_e7k_MQ7sgMYxjTUVoxI4wJww",
+          authDomain: "isaaczingers.firebaseapp.com",
+          projectId: "isaaczingers",
+          storageBucket: "isaaczingers.firebasestorage.app",
+          messagingSenderId: "1022887934210",
+          appId: "1:1022887934210:web:a07c42b5be17074296aa1b",
+          measurementId: "G-ENMFW1PNQE"
+        };
+
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const database = firebase.database(app);
+
+        // Reference to the counter in the database
+        const counterRef = database.ref('counter');
+
+        // Get the elements
+        const counterValue = document.getElementById('counterValue');
+        const addZingerButton = document.getElementById('addZingerButton');
+
+        // Display current counter value
+        counterRef.on('value', snapshot => {
+            const zingerCount = snapshot.val();
+            counterValue.textContent = zingerCount;
+        });
+
+        // Simple way to check if the user is "Isaac" based on a secret key or condition
+        // You can replace this with a proper authentication system if needed
+        const userIsIsaac = prompt("Enter secret code to edit the counter") === "THERESAGODINMYHEAD";
+
+        // Show the button only if you're Isaac
+        if (userIsIsaac) {
+            addZingerButton.style.display = "inline-block";
+        }
+
+        // Update the counter in Firebase
+        addZingerButton.addEventListener('click', () => {
+            counterRef.transaction(currentValue => {
+                return (currentValue || 0) + 1;
+            });
+        });
+    </script>
 </body>
 </html>
