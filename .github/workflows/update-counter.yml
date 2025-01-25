@@ -1,7 +1,7 @@
 name: Update Zinger Count
 
 on:
-  workflow_dispatch: # This will allow you to manually trigger the action
+  workflow_dispatch:  # Trigger manually with input for zinger count
     inputs:
       zinger_count:
         description: 'New Zinger Count'
@@ -26,3 +26,5 @@ jobs:
           git add counter.json
           git commit -m "Update zinger count to ${{ github.event.inputs.zinger_count }}"
           git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Use the secret token here
