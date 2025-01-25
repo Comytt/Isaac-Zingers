@@ -3,134 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">
     <title>Isaac's Zingers Counter</title>
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.0.2/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.0.2/firebase-database.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.0.2/firebase-auth.js"></script>
+    <link rel="stylesheet" href="styles.css"> <!-- Link to your CSS -->
 </head>
 <body>
-    <div>
+    <div class="container">
         <h1>Isaac's Zingers Counter</h1>
         <p>How many zingers has Isaac made?</p>
-        <div>
-            <span id="counterValue">0</span>
+        <div class="counter">
+            <span id="counterValue">Loading...</span>
         </div>
-        <div>
+        <div class="visitorCount">
             <p>Visitor count: <span id="visitorCount">0</span></p>
         </div>
-        <button id="addZingerButton" style="display:none;">Add Zinger</button>
+        <button id="addZingerButton" onclick="addZinger()">Add Zinger (You Only)</button>
     </div>
 
-    <!-- Authentication Modal -->
-    <div id="authModal" style="display:none;">
-        <div>
-            <h2>Sign In to Add Zingers</h2>
-            <input type="email" id="email" placeholder="Email" required>
-            <input type="password" id="password" placeholder="Password" required>
-            <button id="signInButton">Sign In</button>
-            <button id="signUpButton">Sign Up</button>
-            <p id="authError" style="color: red;"></p>
-        </div>
-    </div>
-
+    <!-- Firebase SDK -->
     <script>
-        // Firebase config
-        const firebaseConfig = {
-            apiKey: "AIzaSyCq431flv_e7k_MQ7sgMYxjTUVoxI4wJww",
-            authDomain: "isaaczingers.firebaseapp.com",
-            projectId: "isaaczingers",
-            storageBucket: "isaaczingers.firebasestorage.app",
-            messagingSenderId: "1022887934210",
-            appId: "1:1022887934210:web:a07c42b5be17074296aa1b",
-            measurementId: "G-ENMFW1PNQE"
-        };
-
-        // Initialize Firebase
-        const app = firebase.initializeApp(firebaseConfig);
-        const database = firebase.database(app);
-        const auth = firebase.auth();
-
-        // References to the counter and visitor count in the database
-        const counterRef = database.ref('counter');
-        const visitorCountRef = database.ref('visitorCount');
-
-        // Get the elements
         const counterValue = document.getElementById('counterValue');
-        const visitorCount = document.getElementById('visitorCount');
         const addZingerButton = document.getElementById('addZingerButton');
-        const authModal = document.getElementById('authModal');
-        const emailInput = document.getElementById('email');
-        const passwordInput = document.getElementById('password');
-        const authError = document.getElementById('authError');
 
-        // Display visitor count
-        visitorCountRef.on('value', snapshot => {
-            const visitors = snapshot.val();
-            visitorCount.textContent = visitors;
-        });
+        let zingerCount = 0; // Initialize count
 
-        // Increment visitor count
-        visitorCountRef.transaction(currentVisitors => {
-            return (currentVisitors || 0) + 1;
-        });
-
-        // Listen for changes in the zinger count
-        counterRef.on('value', snapshot => {
-            const zingerCount = snapshot.val();
-            counterValue.textContent = zingerCount;
-        });
-
-        // Show the button only if the user is authenticated
-        auth.onAuthStateChanged(user => {
-            if (user) {
-                addZingerButton.style.display = "inline-block";
-                authModal.style.display = "none";
-            } else {
-                authModal.style.display = "flex";
-                addZingerButton.style.display = "none";
-            }
-        });
-
-        // Handle Sign In
-        document.getElementById('signInButton').addEventListener('click', () => {
-            const email = emailInput.value;
-            const password = passwordInput.value;
-            auth.signInWithEmailAndPassword(email, password)
-                .then(() => {
-                    // Clear the form and hide modal
-                    emailInput.value = '';
-                    passwordInput.value = '';
-                    authError.textContent = '';
-                })
-                .catch(error => {
-                    authError.textContent = error.message;
-                });
-        });
-
-        // Handle Sign Up
-        document.getElementById('signUpButton').addEventListener('click', () => {
-            const email = emailInput.value;
-            const password = passwordInput.value;
-            auth.createUserWithEmailAndPassword(email, password)
-                .then(() => {
-                    // Clear the form and hide modal
-                    emailInput.value = '';
-                    passwordInput.value = '';
-                    authError.textContent = '';
-                })
-                .catch(error => {
-                    authError.textContent = error.message;
-                });
-        });
-
-        // Add Zinger button functionality
-        addZingerButton.addEventListener('click', () => {
-            counterRef.transaction(currentValue => {
-                return (currentValue || 0) + 1;
+        // Fetch the current zinger count from GitHub repository
+        fetch('https://raw.githubusercontent.com/yourusername/yourrepository/main/counter.json')
+            .then(response => response.json())
+            .then(data => {
+                zingerCount = data.zingers;
+                counterValue.textContent = zingerCount;
             });
-        });
+
+        // Allow only you to update the zinger count
+        function addZinger() {
+            // Check if you're signed in to GitHub (you can use OAuth for this)
+            // Here we'll just use a simple alert for demonstration
+            const userIsAuthorized = confirm("Are you authorized to add a zinger?");
+            if (userIsAuthorized) {
+                // Update the count by triggering a GitHub Action via a repository dispatch event
+                fetch('https://api.github.com/repos/yourusername/yourrepository/dispatches', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer YOUR_GITHUB_TOKEN'  // You need to generate a GitHub token with repo permissions
+                    },
+                    body: JSON.stringify({
+                        event_type: 'update-zinger-count',
+                        client_payload: {
+                            zinger_count: zingerCount + 1
+                        }
+                    })
+                }).then(response => {
+                    if (response.ok) {
+                        alert("Zinger added successfully!");
+                    } else {
+                        alert("Failed to update zinger count.");
+                    }
+                });
+            } else {
+                alert("You are not authorized to add a zinger.");
+            }
+        }
     </script>
 </body>
 </html>
