@@ -1,0 +1,28 @@
+name: Update Zinger Count
+
+on:
+  workflow_dispatch: # This will allow you to manually trigger the action
+    inputs:
+      zinger_count:
+        description: 'New Zinger Count'
+        required: true
+        default: '0'
+
+jobs:
+  update_counter:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Update counter.json
+        run: |
+          echo "{\"zingers\": ${{ github.event.inputs.zinger_count }}}" > counter.json
+          
+      - name: Commit Changes
+        run: |
+          git config --global user.email "youremail@example.com"
+          git config --global user.name "Your GitHub Username"
+          git add counter.json
+          git commit -m "Update zinger count to ${{ github.event.inputs.zinger_count }}"
+          git push
