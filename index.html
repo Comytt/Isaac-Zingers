@@ -1,1 +1,33 @@
-<p>test</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Isaac's Zingers Counter</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Isaac's Zingers Counter</h1>
+        <p>How many zingers has Isaac made?</p>
+        <div class="counter">
+            <span id="counterValue">0</span>
+        </div>
+        <button id="addZingerButton">Add Zinger</button>
+    </div>
+
+    <script>
+        // Get the elements
+        const counterValue = document.getElementById('counterValue');
+        const addZingerButton = document.getElementById('addZingerButton');
+        
+        let zingerCount = 0;
+
+        // Function to increase the zinger count
+        addZingerButton.addEventListener('click', () => {
+            zingerCount++;
+            counterValue.textContent = zingerCount;
+        });
+    </script>
+</body>
+</html>
