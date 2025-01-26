@@ -3,95 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Isaac's Zingers Counter</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Password Protected Counter</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Linking the CSS file -->
 </head>
 <body>
-    <div class="container">
-        <h1>Isaac's Zingers Counter</h1>
-        <p>How many zingers has Isaac made?</p>
-        
-        <div class="counter">
-            <span id="counterValue">Loading...</span> <!-- This will be updated with the actual count -->
-        </div>
 
-        <!-- Password input -->
-        <div id="passwordSection">
-            <input type="password" id="passwordInput" placeholder="Enter Password" />
-            <button id="submitPasswordButton" onclick="verifyPassword()">Submit</button>
-        </div>
+    <h1>Password Protected Counter</h1>
 
-        <!-- Add zinger button (hidden until password is entered correctly) -->
-        <button id="addZingerButton" onclick="addZinger()" style="display:none;">Add Zinger</button>
+    <!-- Password input section -->
+    <div id="password-section">
+        <input type="password" id="password-input" placeholder="Enter password">
+        <button onclick="checkPassword()">Submit</button>
     </div>
 
-    <script>
-        const correctPassword = 'yourpassword'; // Set your password here
-        let isPasswordCorrect = false;
+    <!-- Counter section -->
+    <div id="counter-section" class="hidden">
+        <div class="counter">
+            Counter: <span id="counter-value">0</span>
+        </div>
+        <div class="button-container">
+            <button onclick="incrementCounter()">Add 1</button>
+        </div>
+    </div>
 
-        // Function to load the counter from GitHub repository
-        function loadCounter() {
-            fetch('/get-counter')
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('counterValue').textContent = data.zingers;
-                })
-                .catch(error => {
-                    console.error("Error fetching zinger count:", error);
-                    document.getElementById('counterValue').textContent = "Error loading count";
-                });
-        }
-
-        // Function to verify the password
-        function verifyPassword() {
-            const enteredPassword = document.getElementById('passwordInput').value;
-
-            if (enteredPassword === correctPassword) {
-                isPasswordCorrect = true;
-                document.getElementById('passwordSection').style.display = 'none'; // Hide the password input
-                document.getElementById('addZingerButton').style.display = 'block'; // Show the "Add Zinger" button
-                alert('Password correct! You can now add zingers.');
-            } else {
-                alert('Incorrect password. Please try again.');
-            }
-        }
-
-        // Function to add a zinger and update the counter on GitHub
-        function addZinger() {
-            const currentCount = parseInt(document.getElementById('counterValue').textContent);
-
-            if (isNaN(currentCount)) {
-                alert("Unable to add zinger. Please try again.");
-                return;
-            }
-
-            const newZingerCount = currentCount + 1;
-
-            // Make a request to update zinger count on GitHub (the backend server will handle the update)
-            fetch('/update-zinger', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ zingerCount: newZingerCount })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('Zinger added successfully!');
-                    loadCounter();  // Reload the counter after adding a zinger
-                } else {
-                    alert('Failed to update zinger count.');
-                }
-            })
-            .catch(error => {
-                alert('Error: ' + error.message);
-            });
-        }
-
-        // Load the counter when the page loads
-        window.onload = loadCounter;
-    </script>
+    <script src="script.js"></script> <!-- Linking the JavaScript file -->
 </body>
 </html>
-
