@@ -1,5 +1,5 @@
 // Predefined correct password
-const correctPassword = "yourpassword"; // Change this to your password
+const correctPassword = "fortnite"; // Change this to your password
 
 let counter = 0;
 
