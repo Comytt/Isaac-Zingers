@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Password Protected Counter</title>
     <link rel="stylesheet" href="styles.css"> <!-- Linking the CSS file -->
+    <!-- Add Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.1.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.1.1/firebase-database.js"></script>
 </head>
 <body>
 
@@ -21,8 +24,9 @@
         <div class="counter">
             Counter: <span id="counter-value">0</span>
         </div>
+        <!-- The button will be shown only after correct password -->
         <div class="button-container">
-            <button onclick="incrementCounter()">Add 1</button>
+            <button id="counter-button" class="hidden" onclick="incrementCounter()">Add 1</button>
         </div>
     </div>
 
